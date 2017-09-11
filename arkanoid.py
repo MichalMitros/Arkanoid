@@ -1,5 +1,6 @@
 import pygame, sys
 from paddle import Paddle
+from ball import Ball
 
 
 class ArkanoidGame(object):
@@ -12,9 +13,11 @@ class ArkanoidGame(object):
         pygame.display.set_caption('Arkanoid')
         self.tps_clock = pygame.time.Clock()
         self.tps_delta = 0.0
+        self.play = False
 
         # Game objects initialization
         self.player = Paddle(self)
+        self.ball = Ball(self)
 
         # Game loop
         while True:
@@ -23,6 +26,8 @@ class ArkanoidGame(object):
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     sys.exit(0)
+                elif event.type == pygame.KEYDOWN and not event.key == pygame.K_ESCAPE:
+                    self.play = True
                 elif event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
                     sys.exit(0)
 
@@ -38,12 +43,15 @@ class ArkanoidGame(object):
             pygame.display.flip()
 
     def tick(self):
-        self.player.tick()
+        if self.play:
+            self.player.tick()
+            self.ball.tick()
 
     def draw(self):
+        self.ball.draw()
         self.player.draw()
 
 
-
+# Running game
 if __name__ == "__main__":
     ArkanoidGame()

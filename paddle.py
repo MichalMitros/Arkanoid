@@ -7,7 +7,7 @@ class Paddle(object):
         self.game = game
         self.resolution = self.game.screen.get_size()
         self.pos = Vector2(self.resolution[0]/2, self.resolution[1]*0.9)
-        self.size = {'width':self.resolution[0]/5, 'height':self.resolution[1]/100}
+        self.size = {'width':self.resolution[0]/5, 'height':self.resolution[1]/80}
         self.speed = 4
 
     def tick(self):
@@ -24,4 +24,4 @@ class Paddle(object):
         rectangle = pygame.Rect(self.pos.x, self.pos.y, self.size['width'], self.size['height'])
 
         # Drawing ractangle
-        pygame.draw.rect(self.game.screen, (0, 64, 255), rectangle)
+        pygame.draw.rect(self.game.screen, (0, 96, 255), rectangle)
