@@ -8,7 +8,7 @@ class Paddle(object):
         self.resolution = self.game.screen.get_size()
         self.size = {'width':self.resolution[0]/5, 'height':self.resolution[1]/80}
         self.pos = Vector2(self.resolution[0] / 2 - self.size['width']/2, self.resolution[1] * 0.9)
-        self.speed = 4
+        self.speed = 5
 
     def tick(self):
         # Input check

@@ -1,6 +1,7 @@
 import pygame, sys
 from paddle import Paddle
 from ball import Ball
+from brick import Brick
 
 
 class ArkanoidGame(object):
@@ -15,10 +16,17 @@ class ArkanoidGame(object):
         self.tps_delta = 0.0
         self.play = False
         self.is_game_over = False
+        self.bricks_rows = 3
+        self.bricks_cols = 4
+        self.lifes = 3
 
         # Game objects initialization
         self.player = Paddle(self)
         self.ball = Ball(self)
+        self.bricks = []
+
+        #Creating bricks (columns, rows)
+        self.createBricks(self.bricks_cols, self.bricks_rows)
 
         # Game loop
         while not self.is_game_over:
@@ -47,13 +55,51 @@ class ArkanoidGame(object):
         if self.play:
             self.player.tick()
             self.ball.tick()
-            self.ball.bounceoffPaddle(self.player)
+            self.ball.bounceOffPaddle(self.player)
+            for brick in self.bricks:
+                if self.ball.isBouncedOffBrick(brick):
+                    self.bricks.remove(brick)
             if self.ball.pos.y > self.screen.get_size()[1]:
-                self.is_game_over = True
+                if self.lifes == 0:
+                    self.is_game_over = True
+                else:
+                    self.lifes -= 1
+                    self.resetLevel()
+            if len(self.bricks) == 0:
+                self.nextLevel()
 
     def draw(self):
         self.ball.draw()
+        for brick in self.bricks:
+            brick.draw()
         self.player.draw()
+
+    def createBricks(self, cols=4, rows=3):
+        w = self.screen.get_size()[0]
+        h = self.screen.get_size()[1]
+        dx = w/cols
+        y = 0
+        dy = (h/2)/rows
+        while y <= h/2-1:
+            x = 0
+            while x <= w-1:
+                self.bricks.append(Brick(self, x+dx/10, y+dy/8, (4*dx)/5, (3*dy)/4))
+                x += dx
+            y += dy
+
+    def resetLevel(self):
+        self.play = False
+        self.is_game_over = False
+
+        self.player = Paddle(self)
+        self.ball = Ball(self)
+        self.bricks = []
+        self.createBricks(self.bricks_cols, self.bricks_rows)
+
+    def nextLevel(self):
+        self.bricks_rows += 1;
+        self.bricks_cols += 1;
+        self.resetLevel()
 
 
 # Running game

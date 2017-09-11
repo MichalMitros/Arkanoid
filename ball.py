@@ -27,9 +27,19 @@ class Ball(object):
         # Drawing oval inside created rectangle
         pygame.draw.ellipse(self.game.screen, (0, 255, 96), rectangle)
 
-    def bounceoffPaddle(self, paddle):
+    def bounceOffPaddle(self, paddle):
         # Check if ball should be bounced
         if self.pos.x + self.size['width'] >= paddle.pos.x and self.pos.x <= paddle.pos.x + paddle.size['width']:
             if self.pos.y + self.size['height'] >= paddle.pos.y and self.pos.y <= paddle.pos.y + paddle.size['height']:
                 if self.vel.y > 0:
                     self.vel.y *= -1
+
+    def isBouncedOffBrick(self, brick):
+        if self.pos.x + self.size['width'] >= brick.pos.x and self.pos.x <= brick.pos.x + brick.size['width']:
+            if self.pos.y + self.size['height'] >= brick.pos.y and self.pos.y <= brick.pos.y + brick.size['height']:
+                if self.pos.y < brick.pos.y or self.pos.y+self.size['height'] > brick.pos.y+brick.size['height']:
+                    self.vel.y *= -1
+                elif self.pos.x < brick.pos.x or self.pos.x+self.size['width'] > brick.pos.x+brick.size['width']:
+                    self.vel.x *= -1
+                return True
+        return False
