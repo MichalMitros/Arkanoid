@@ -14,13 +14,14 @@ class ArkanoidGame(object):
         self.tps_clock = pygame.time.Clock()
         self.tps_delta = 0.0
         self.play = False
+        self.is_game_over = False
 
         # Game objects initialization
         self.player = Paddle(self)
         self.ball = Ball(self)
 
         # Game loop
-        while True:
+        while not self.is_game_over:
 
             # Handle events
             for event in pygame.event.get():
@@ -46,6 +47,9 @@ class ArkanoidGame(object):
         if self.play:
             self.player.tick()
             self.ball.tick()
+            self.ball.bounceoffPaddle(self.player)
+            if self.ball.pos.y > self.screen.get_size()[1]:
+                self.is_game_over = True
 
     def draw(self):
         self.ball.draw()
@@ -54,4 +58,5 @@ class ArkanoidGame(object):
 
 # Running game
 if __name__ == "__main__":
-    ArkanoidGame()
+    while True:
+        ArkanoidGame()
