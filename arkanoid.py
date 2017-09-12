@@ -9,16 +9,18 @@ class ArkanoidGame(object):
     def __init__(self, width=800, height=600):
         # Game initialization
         pygame.init()
+        pygame.font.init()
         self.tps_max = 100.0
         self.screen = pygame.display.set_mode((width, height))
         pygame.display.set_caption('Arkanoid')
+        self.resolution = self.screen.get_size()
         self.tps_clock = pygame.time.Clock()
         self.tps_delta = 0.0
         self.play = False
         self.is_game_over = False
         self.bricks_rows = 3
-        self.bricks_cols = 4
-        self.lifes = 3
+        self.bricks_cols = self.bricks_rows + 1
+        self.lives = 3
 
         # Game objects initialization
         self.player = Paddle(self)
@@ -60,10 +62,10 @@ class ArkanoidGame(object):
                 if self.ball.isBouncedOffBrick(brick):
                     self.bricks.remove(brick)
             if self.ball.pos.y > self.screen.get_size()[1]:
-                if self.lifes == 0:
+                if self.lives == 1:
                     self.is_game_over = True
                 else:
-                    self.lifes -= 1
+                    self.lives -= 1
                     self.resetLevel()
             if len(self.bricks) == 0:
                 self.nextLevel()
@@ -73,6 +75,9 @@ class ArkanoidGame(object):
         for brick in self.bricks:
             brick.draw()
         self.player.draw()
+        myfont = pygame.font.SysFont('Comic Sans MS', 30)
+        textsurface = myfont.render('Lives: '+str(self.lives), False, (255, 255, 255))
+        self.screen.blit(textsurface, (self.resolution[0]*0.02, self.resolution[1]*0.95))
 
     def createBricks(self, cols=4, rows=3):
         w = self.screen.get_size()[0]
@@ -99,6 +104,8 @@ class ArkanoidGame(object):
     def nextLevel(self):
         self.bricks_rows += 1;
         self.bricks_cols += 1;
+        if self.lives != 3:
+            self.lives += 1
         self.resetLevel()
 
 
